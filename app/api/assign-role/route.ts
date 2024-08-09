@@ -1,10 +1,10 @@
-import { NextResponse } from 'next/server';
+import { NextResponse, type NextRequest } from 'next/server';
 import { PrismaClient } from '@prisma/client';
 import { currentUser } from '@clerk/nextjs/server';
 
 const prisma = new PrismaClient();
 
-export async function POST(request) {
+export async function POST(request: NextRequest) {
   const user = await currentUser();
 
   if (!user) {
@@ -18,10 +18,12 @@ export async function POST(request) {
   }
 
   try {
+    // Check if the user already exists in the database
     let existingUser = await prisma.user.findUnique({
       where: { clerkId: user.id },
     });
 
+    // If the user doesn't exist, create a new one
     if (!existingUser) {
       await prisma.user.create({
         data: {
@@ -33,6 +35,7 @@ export async function POST(request) {
         },
       });
     } else if (!existingUser.role) {
+      // If user exists and has no role assigned, update the role
       await prisma.user.update({
         where: { clerkId: user.id },
         data: {
@@ -40,6 +43,7 @@ export async function POST(request) {
         },
       });
     } else {
+      // If the user already has a role assigned, prevent changing
       return NextResponse.json({ error: 'Role has already been assigned and cannot be changed' }, { status: 400 });
     }
 
