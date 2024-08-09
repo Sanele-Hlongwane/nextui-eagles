@@ -8,9 +8,6 @@ export default function HomePage() {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [role, setRole] = useState<string | null>(null);
-  const [userData, setUserData] = useState<any>(null); // Replace with appropriate type
-  const [connections, setConnections] = useState<any[]>([]); // Replace with appropriate type
-  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     async function fetchUserRole() {
@@ -19,15 +16,12 @@ export default function HomePage() {
         if (response.ok) {
           const data = await response.json();
           setRole(data.role);
-          setUserData(data.user); // Assume `user` object contains user-specific data
-          setConnections(data.connections); // Assume `connections` is a list of connected users
           setLoading(false);
         } else {
           setLoading(false);
         }
       } catch (error) {
-        console.error('Failed to fetch user role or data', error);
-        setError('Failed to fetch user data');
+        console.error('Failed to fetch user role', error);
         setLoading(false);
       }
     }
@@ -39,10 +33,6 @@ export default function HomePage() {
     return <div>Loading...</div>;
   }
 
-  if (error) {
-    return <div>Error: {error}</div>;
-  }
-
   if (role === 'INVESTOR') {
     return (
       <div className="relative min-h-screen bg-gray-50 dark:bg-black text-gray-900 dark:text-white">
@@ -51,30 +41,13 @@ export default function HomePage() {
           <p className="text-xl mb-8">
             Welcome to your investor dashboard! Here you can find potential startups to invest in.
           </p>
+          {/* Additional content for Investor Dashboard */}
           <section className="mb-12 max-w-4xl mx-auto">
             <h2 className="text-2xl font-semibold mb-4">Your Investments</h2>
             <p className="text-lg mb-6">
               Track and manage your investments here. View detailed information about each investment.
             </p>
-            {/* Display list of investments */}
-          </section>
-          <section className="mb-12 max-w-4xl mx-auto">
-            <h2 className="text-2xl font-semibold mb-4">Connect with Entrepreneurs</h2>
-            <p className="text-lg mb-6">
-              View profiles of entrepreneurs and connect with those whose ideas interest you.
-            </p>
-            {/* Display list of entrepreneurs */}
-            <ul>
-              {connections.map((user) => (
-                <li key={user.id} className="border rounded-lg p-6 mb-4 bg-white dark:bg-black">
-                  <h4 className="text-lg font-semibold mb-2">{user.name}</h4>
-                  <p>{user.description}</p>
-                  <button className="bg-primary text-white py-2 px-4 rounded-lg mt-4 hover:bg-primary-dark transition duration-300">
-                    Connect
-                  </button>
-                </li>
-              ))}
-            </ul>
+            {/* List or other components to display investments */}
           </section>
         </main>
       </div>
@@ -89,30 +62,13 @@ export default function HomePage() {
           <p className="text-xl mb-8">
             Welcome to your entrepreneur dashboard! Here you can pitch your ideas to potential investors.
           </p>
+          {/* Additional content for Entrepreneur Dashboard */}
           <section className="mb-12 max-w-4xl mx-auto">
             <h2 className="text-2xl font-semibold mb-4">Your Pitches</h2>
             <p className="text-lg mb-6">
               Manage and review your pitches here. Keep track of the status and feedback from investors.
             </p>
-            {/* Display list of pitches */}
-          </section>
-          <section className="mb-12 max-w-4xl mx-auto">
-            <h2 className="text-2xl font-semibold mb-4">Connect with Investors</h2>
-            <p className="text-lg mb-6">
-              Browse through investors and see who might be interested in your ideas.
-            </p>
-            {/* Display list of investors */}
-            <ul>
-              {connections.map((user) => (
-                <li key={user.id} className="border rounded-lg p-6 mb-4 bg-white dark:bg-black">
-                  <h4 className="text-lg font-semibold mb-2">{user.name}</h4>
-                  <p>{user.description}</p>
-                  <button className="bg-primary text-white py-2 px-4 rounded-lg mt-4 hover:bg-primary-dark transition duration-300">
-                    Connect
-                  </button>
-                </li>
-              ))}
-            </ul>
+            {/* List or other components to display pitches */}
           </section>
         </main>
       </div>
